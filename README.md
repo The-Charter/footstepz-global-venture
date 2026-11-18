@@ -33,7 +33,7 @@ bun run contracts:test   # run contract tests
 
 ### Environment variables
 
-- `DATABASE_URL`: Postgres connection string.
+- `DATABASE_URL`: Postgres connection string (local Docker, Render Postgres or Supabase). For Supabase on Render use the Session pooler string, because the direct connection is IPv6 only.
 - `OWNER_ADDRESS`: the shop owner wallet. Only this wallet can sign in to the admin page.
 - `SESSION_SECRET`: random secret used to protect admin sessions.
 - `PORT` or `API_PORT`: port for the API server (defaults to 3001).

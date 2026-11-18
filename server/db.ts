@@ -3,7 +3,11 @@ import { SQL } from 'bun'
 const url = process.env.DATABASE_URL
 if (!url) throw new Error('DATABASE_URL is not set')
 
-export const sql = new SQL(url)
+// Hosted Postgres such as Supabase requires TLS. Supabase's pooler certificate is signed by
+// its own CA, so for those hosts we encrypt the connection without CA verification.
+const hostedTls = /supabase\.(com|co)\b/.test(url) || /sslmode=(require|prefer|verify-ca|verify-full)/.test(url)
+
+export const sql = hostedTls ? new SQL(url, { tls: { rejectUnauthorized: false } }) : new SQL(url)
 
 export type OrderStatus = 'pending' | 'paid' | 'shipped' | 'refunded'
 
@@ -78,4 +82,10 @@ export async function migrate() {
       address TEXT NOT NULL,
       expires_at TIMESTAMPTZ NOT NULL
     )`
+  // Supabase exposes the public schema through its Data API. Turning on row level security
+  // with no policies blocks that API from reading these tables (orders hold delivery details).
+  // This server connects as the database owner, which is not affected by it.
+  await sql`ALTER TABLE products ENABLE ROW LEVEL SECURITY`
+  await sql`ALTER TABLE orders ENABLE ROW LEVEL SECURITY`
+  await sql`ALTER TABLE admin_sessions ENABLE ROW LEVEL SECURITY`
 }
