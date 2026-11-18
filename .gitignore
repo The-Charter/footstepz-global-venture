@@ -1,0 +1,13 @@
+.env
+.env.*
+!.env.example
+.circle/
+recovery_file*
+node_modules
+dist
+contracts/out
+contracts/cache
+cache
+out
+traces.jsonl
+console.jsonl

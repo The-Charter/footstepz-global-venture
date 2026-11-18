@@ -1,0 +1,9 @@
+node_modules
+.env
+.env.*
+.git
+dist
+contracts
+scripts
+.circle
+*.jsonl

@@ -1,0 +1,15 @@
+[build]
+  command = "npm install --legacy-peer-deps --no-audit --no-fund && npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"
+  VITE_ESCROW_ADDRESS = "0x0d2B503AcB7D6Da115aB7b06B977911405Cf7E2D"
+  # Also set VITE_API_BASE_URL in Netlify > Site settings > Environment variables
+  # to your Render API URL (for example https://footstepz-api.onrender.com).
+
+# Single-page app: send every path to index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

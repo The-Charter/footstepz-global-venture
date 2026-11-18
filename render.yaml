@@ -1,0 +1,27 @@
+# Render Blueprint: Footstepz API + Postgres.
+# New > Blueprint, pick this repo, then fill in the prompted values.
+services:
+  - type: web
+    name: footstepz-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: footstepz-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: OWNER_ADDRESS
+        sync: false # your owner wallet address (public)
+      - key: CORS_ORIGINS
+        sync: false # your Netlify site URL, e.g. https://your-site.netlify.app
+      - key: VITE_ESCROW_ADDRESS
+        value: "0x0d2B503AcB7D6Da115aB7b06B977911405Cf7E2D"
+
+databases:
+  - name: footstepz-db
+    plan: free
+    databaseName: footstepz
